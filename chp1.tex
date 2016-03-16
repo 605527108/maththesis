@@ -1,0 +1,13 @@
+\chapter{背景及介绍}
+Gallager在1962年提出低密度校验分组码（引文），同时他还提出了一种信息遍历解码算法。
+在（引文）中,模拟结果显示，用信息遍历算法解码LDPC分组码的性能超过了turbo码，并接近香农极限。
+在Low-density parity-check code over GF(q)1998，Davey和MacKay考虑了定义在GF(q)的LDPC分组码并且把Gallager的BP解码算法推广到q元和积算法，得到很好的性能。
+
+LDPC卷积码是由Felström和Zigangirov在（引文）提出来的。
+我们可以通过将几个正则LDPC码叠加连接在一起形成LDPC卷积码。
+LDPC卷积码的特点是它的BP解码阈值能达到它所基于的LDPC码的最大后验概率(MAP)解码阈值（引文）。
+为了解决LDPC卷积码顺序解码时占用大量内存和解码延时过长的缺点，在（引文）Windowed erasure decoding of LDPC convolutional codes中考虑了一种窗口解码，并研究了解码延时和解码性能的取舍。
+
+由于LDPC卷积码与LDPC分组码具有相似的结构，并且在解码延时和解码性能中的取舍，一些文章已经开始研究其二者的性能比较Comparison of LDPC Block and LDPC Convolutional Codes Based on their Decoding Latency，LDPC Codes and Convolutional Codes with Equal Structural Delay: A Comparison。
+本文基于以上进行q元域的推广，同时比较别的实用参数。
+本文的结构如下：第一章主要是LDPC卷积码与LDPC分组码背景及介绍。第二章主要是描述LDPC卷积码与LDPC分组码的构建过程，要在特殊的构建原则上两者才能比较。第三章主要描述LDPC卷积码与LDPC分组码的解码算法，并且计算了两种算法的解码延时。第四章通过固定几个参数比较另外的参数，比较LDPC卷积码与LDPC分组码的性能。第五章是结论及总结
