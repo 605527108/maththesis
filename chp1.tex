@@ -1,14 +1,14 @@
 \chapter{背景及介绍}
-Gallager在1962年提出低密度校验分组码\cite{Gallager1963Low}，同时他还提出了一种信息遍历解码算法。
-在Richardson等人模拟试验中\cite{keylist}，用信息遍历算法解码LDPC分组码的性能超过了turbo码，并且接近香农极限。
-Davey和MacKay考虑了定义在GF(q)的LDPC分组码\cite{Davey1998Low}并且把Gallager的BP解码算法推广到q元，称作和积算法，并得到很好的性能。
+Gallager在1962年提出低密度校验分组码\parencite{Gallager1963Low}，同时他还提出了一种信息遍历解码算法。
+在Richardson等人模拟试验中\parencite{Richardson2001Design}，用信息遍历算法解码LDPC分组码的性能超过了turbo码，并且接近香农极限。
+Davey和MacKay考虑了定义在GF(q)的LDPC分组码\parencite{Davey1998Low}并且把Gallager的BP解码算法推广到q元，称作和积算法，并得到很好的性能。
 
-由Felström和Zigangirov\cite{Felstrom1999Time}提出来的LDPC卷积码可以通过几个正则LDPC码叠加连接而成。
-LDPC卷积码的特点是它的BP解码阈值能达到它所基于的LDPC码的最大后验概率(MAP)解码阈值\cite{Kudekar2010Threshold}。
+由Felström和Zigangirov\parencite{Felstrom1999Time}提出来的LDPC卷积码可以通过几个正则LDPC码叠加连接而成。
+LDPC卷积码的特点是它的BP解码阈值能达到它所基于的LDPC码的最大后验概率(MAP)解码阈值\parencite{Kudekar2010Threshold}。
 但是为了达到接近香农极限的性能，BP算法必须经过多次迭代，将占用大量内存同时有很高的译码延时。
-为了解决LDPC卷积码顺序解码时以上缺点，Papaleo等人考虑了BP算法窗口解码版本\cite{Papaleo2010Windowed}，并研究了算法中解码延时和解码性能之间的取舍。
+为了解决LDPC卷积码顺序解码时以上缺点，Papaleo等人考虑了BP算法窗口解码版本\parencite{Papaleo2010Windowed}，并研究了算法中解码延时和解码性能之间的取舍。
 
-由于LDPC卷积码与LDPC分组码具有相似的结构，并且在解码延时和解码性能互有取舍，Hassan等人基于解码延时\cite{Ul2012Comparison}和Hehn等人基于结构延时\cite{Hehn2009LDPC}研究其二者的性能比较。
+由于LDPC卷积码与LDPC分组码具有相似的结构，并且在解码延时和解码性能互有取舍，Hassan等人基于解码延时\parencite{Ul2012Comparison}和Hehn等人基于结构延时\parencite{Hehn2009LDPC}研究其二者的性能比较。
 本文基于以上的研究进行q元域的推广，同时比较其他相关参数对LDPC卷积码与LDPC分组码解码性能的影响。
 本文的结构如下：第一章主要是LDPC卷积码与LDPC分组码背景及介绍。
 第二章主要是描述LDPC卷积码与LDPC分组码的构建过程，要在特殊的构建原则上两者才能比较。
