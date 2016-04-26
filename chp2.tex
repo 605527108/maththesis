@@ -1,158 +1,297 @@
-\chapter{基于原型构造的LDPC码}
-\section{LDPC码的原型}
-每一个LDPC码都对应着一个Tanner图，也可称为原型，或者称为基本图。如下图，
+\chapter{基于原模图构造的LDPC码}
+\section{LDPC码的原模图及LDPC码的叠加方式}
+每一个LDPC码都对应着一个Tanner图。
+在LDPC码的叠加过程中，该Tanner图称为原模图，或者基本图。
+如图\ref{fig:basegraph}，该图右侧为对应LDPC码的校验矩阵，其中圈中等号代表变量节点，圈中加号代表校验节点。
 \begin{center}
+\def\check{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (0,3.5pt)--(0,-3.5pt);
+    \draw [very thick] (3.5pt,0)--(-3.5pt,0);
+}
+\def\bit{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (-3.2pt,2.2pt)--(3.2pt,2.2pt);
+    \draw [very thick] (-3.2pt,-2.2pt)--(3.2pt,-2.2pt);
+}
 \begin{tikzpicture}
-[check/.style={rectangle,fill=black!50,thick},
-bit/.style={circle,fill=black!50,thick}]
-\draw (-3,4) -- (-2,0);
-\draw (3,4) -- (-2,0);
-\draw (-1,4) -- (0,0);
-\draw (1,4) -- (0,0);
-\draw (-3,4) -- (2,0);
-\draw (-1,4) -- (2,0);
-\draw (1,4) -- (2,0);
-\draw (3,4) -- (2,0);
-\node[bit] at ( 1,4) [/tikz/label=above:3] {}; 
-\node[bit] at (-1,4) [/tikz/label=above:2] {};
-\node[bit] at (-3,4) [/tikz/label=above:1] {};
-\node[bit] at ( 3,4) [/tikz/label=above:4] {}; 
-\node[check] at ( 0,0) [/tikz/label=below:2] {}; 
-\node[check] at ( 2,0) [/tikz/label=below:3] {}; 
-\node[check] at (-2,0) [/tikz/label=below:1] {};
-\end{tikzpicture}
-\figurecaption{基本图}
-\end{center}
-该基本图描述的LDPC码的校验矩阵记为
-\begin{equation}
+\draw [very thick] (-3,2.5) -- (-2,0);
+\draw [very thick] (3,2.5) -- (-2,0);
+\draw [very thick] (-1,2.5) -- (0,0);
+\draw [very thick] (1,2.5) -- (0,0);
+\draw [very thick] (-3,2.5) -- (2,0);
+\draw [very thick] (-1,2.5) -- (2,0);
+\draw [very thick] (1,2.5) -- (2,0);
+\draw [very thick] (3,2.5) -- (2,0);
+\begin{scope}[xshift=1cm,yshift=2.5cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=-1cm,yshift=2.5cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=3cm,yshift=2.5cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=-3cm,yshift=2.5cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=2cm,yshift=0cm]
+\check
+\end{scope}
+\begin{scope}[xshift=-2cm,yshift=0cm]
+\check
+\end{scope}
+\check
+\draw [<->,thick] (3.3,1.25) -- (4.3,1.25);
+\node at (7,1.25) (steptwo){
+	\begin{minipage}{0.40\textwidth}
+		\begin{equation*}
     H_b = \left(
       \begin{array}{cccc}
         1 & 0 & 0 & 1 \\
         0 & 1 & 1 & 0 \\
         1 & 1 & 1 & 1 
       \end{array} \right)
-\end{equation}
-可以通过叠加基本图构造有结构的LDPC码。
-比如，先复制m次基本图，得到簇状的Tanner图，如下图。
+\end{equation*}
+	\end{minipage}
+};
+\end{tikzpicture}
+\figurecaption{基本图}
+\label{fig:basegraph}
+\end{center}
+
+对于规则的LDPC码，可以采取更简单的原模图来描述。由于规则的LDPC码的每一个信息节点与校验节点都有相同的边相连接，则可以将基本图折叠，如图\ref{fig:protograph}为(3,6)-正则LDPC码的原模图以及对应的基本矩阵描述。
 \begin{center}
+\def\linkdoub{\draw [double distance=1mm, very thick] (0,0)--}
+\def\linksing{\draw [very thick] (0,0)--}
+\def\check{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (0,3.5pt)--(0,-3.5pt);
+    \draw [very thick] (3.5pt,0)--(-3.5pt,0);
+}
+\def\bit{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (-3.2pt,2.2pt)--(3.2pt,2.2pt);
+    \draw [very thick] (-3.2pt,-2.2pt)--(3.2pt,-2.2pt);
+}
+\def\thetaone{90}
+\def\thetatwo{-90}
+\def\armLength{0.9}
+\def\symbolDist{1}
 \begin{tikzpicture}
-[bit/.style={circle,fill=black!50,thick},
-check/.style={rectangle,fill=black!50,thick}]
-\foreach \x / \y / \z in {0/1/0,0.4/2/0.1,0.8/3/0.2,1.2/4/0.3,1.6/5/0.4}
+\linkdoub(\thetaone:\armLength);
+\linksing(\thetaone:\armLength);
+\linksing(\thetatwo:\armLength);
+\begin{scope}[shift=(\thetaone:\symbolDist)]
+\bit
+\end{scope}
+\begin{scope}[shift=(\thetatwo:\symbolDist)]
+\linkdoub(\thetaone:\armLength);
+\linksing(\thetaone:\armLength);
+\bit
+\end{scope}
+\check
+\draw [<->,thick] (0.5,0) -- (1.3,0);
+\node [align=center] at (2.5,0) {$ \mathbf{B} = [\begin{array}{cc} 3&3 \end{array}]$};
+
+\end{tikzpicture}
+\figurecaption{LDPC码的原模图}
+\label{fig:protograph}
+\end{center}
+
+另外，可以通过叠加基本图构造有结构的LDPC码。
+比如，先复制m次基本图，得到簇状的Tanner图，如\ref{fig:copy}。
+\begin{center}
+\def\check{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (0,3.5pt)--(0,-3.5pt);
+    \draw [very thick] (3.5pt,0)--(-3.5pt,0);
+}
+\def\bit{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (-3.2pt,2.2pt)--(3.2pt,2.2pt);
+    \draw [very thick] (-3.2pt,-2.2pt)--(3.2pt,-2.2pt);
+}
+\begin{tikzpicture}
+\foreach \x / \z in {0/0,12/3,24/6}
 {
-	\draw[shift={(\x,\z)}] (-4,4) -- (-3,0);
-	\draw[shift={(\x,\z)}] (4,4) -- (-3,0);
-	\draw[shift={(\x,\z)}] (-2,4) -- (0,0);
-	\draw[shift={(\x,\z)}] (2,4) -- (0,0);
-	\draw[shift={(\x,\z)}] (-4,4) -- (3,0);
-	\draw[shift={(\x,\z)}] (-2,4) -- (3,0);
-	\draw[shift={(\x,\z)}] (2,4) -- (3,0);
-	\draw[shift={(\x,\z)}] (4,4) -- (3,0);
-	\node[bit,shift={(\x,\z)}] at ( 2,4) [/tikz/label=above:3\y] {}; 
-	\node[bit,shift={(\x,\z)}] at (-2,4) [/tikz/label=above:2\y] {};
-	\node[bit,shift={(\x,\z)}] at (-4,4) [/tikz/label=above:1\y] {};
-	\node[bit,shift={(\x,\z)}] at ( 4,4) [/tikz/label=above:4\y] {}; 
-	\node[check,shift={(\x,\z)}] at ( 0,0) [/tikz/label=below:2\y] {}; 
-	\node[check,shift={(\x,\z)}] at ( 3,0) [/tikz/label=below:3\y] {}; 
-	\node[check,shift={(\x,\z)}] at (-3,0) [/tikz/label=below:1\y] {};
+\begin{scope}[xshift=\x,yshift=\z]
+	\draw[very thick] (-3,4) -- (-2,0);
+	\draw[very thick] (3,4) -- (-2,0);
+	\draw[very thick] (-1.2,4) -- (0,0);
+	\draw[very thick] (1.2,4) -- (0,0);
+	\draw[very thick] (-3,4) -- (2,0);
+	\draw[very thick] (-1.2,4) -- (2,0);
+	\draw[very thick] (1.2,4) -- (2,0);
+	\draw[very thick] (3,4) -- (2,0);
+\begin{scope}[xshift=1.2cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=-1.2cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=3cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=-3cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=2cm,yshift=0cm]
+\check
+\end{scope}
+\begin{scope}[xshift=-2cm,yshift=0cm]
+\check
+\end{scope}
+\check
+\end{scope}
 }
 \end{tikzpicture}
+\figurecaption{复制m次基本图}
+\label{fig:copy}
 \end{center}
 然后将基本图对应的$H_b$中为$1$的元素换为来自置换矩阵集合的元素。即
 \begin{equation}
     H = \left(
       \begin{array}{cccc}
-        P^2 & 0 & 0 & P^5 \\
-        0 & P^5 & P^1 & 0 \\
-        P^4 & P^3 & P^2 & P^4 
+        P^2 & 0 & 0 & P^1 \\
+        0 & P^3 & P^1 & 0 \\
+        P^1 & P^3 & P^2 & P^2 
       \end{array} \right)
 \end{equation}
 其中$p^i$对应循环置换矩阵，比如
 \begin{equation}
     P^2 = \left(
-      \begin{array}{ccccc}
-        0 & 0 & 0 & 0 & 1 \\
-        1 & 0 & 0 & 0 & 0 \\
-        0 & 1 & 0 & 0 & 0 \\
-        0 & 0 & 1 & 0 & 0 \\
-        0 & 0 & 0 & 1 & 0 
+      \begin{array}{ccc}
+        0 & 0 & 1 \\
+        1 & 0 & 0 \\
+        0 & 1 & 0
       \end{array} \right)
 \end{equation}
-此时构造出来的LDPC码的Tanner图如下
+图\ref{fig:structed}即为以上方法构造出来的具有一定结构的LDPC码。
 \begin{center}
+\def\check{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (0,3.5pt)--(0,-3.5pt);
+    \draw [very thick] (3.5pt,0)--(-3.5pt,0);
+}
+\def\bit{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (-3.2pt,2.2pt)--(3.2pt,2.2pt);
+    \draw [very thick] (-3.2pt,-2.2pt)--(3.2pt,-2.2pt);
+}
 \begin{tikzpicture}
-[bit/.style={circle,fill=black!50,thick},
-check/.style={rectangle,fill=black!50,thick}]
 %p2
-	\draw (-2.4,4.4) -- (-3,0);
-	\draw (-4,4) -- (-2.6,0.1);
-	\draw (-3.6,4.1) -- (-2.2,0.2);
-	\draw (-3.2,4.2) -- (-1.8,0.3);
-	\draw (-2.8,4.3) -- (-1.4,0.4);
-%p5
-	\draw (4.4,4.1) -- (-3,0);
-	\draw (4.8,4.2) -- (-2.6,0.1);
-	\draw (5.2,4.3) -- (-2.2,0.2);
-	\draw (5.6,4.4) -- (-1.8,0.3);
-	\draw (4,4) -- (-1.4,0.4);
-%p5
-	\draw (-1.6,4.1) -- (0,0);
-	\draw (-1.2,4.2) -- (0.4,0.1);
-	\draw (-0.8,4.3) -- (0.8,0.2);
-	\draw (-0.4,4.4) -- (1.2,0.3);
-	\draw (-2,4) -- (1.6,0.4);
-%p4
-	\draw (-3.2,4.2) -- (3,0);
-	\draw (-2.8,4.3) -- (3.4,0.1);
-	\draw (-2.4,4.4) -- (3.8,0.2);
-	\draw (-4,4)   -- (4.2,0.3);
-	\draw (-3.6,4.1) -- (4.6,0.4);
+  \draw[very thick] (-2.2,4.2) -- (-2,0);
+  \draw[very thick] (-3,4) -- (-1.6,0.1);
+  \draw[very thick] (-2.6,4.1) -- (-1.2,0.2);
 %p3
-	\draw (-0.8,4.3) -- (3,0);
-	\draw (-0.4,4.4) -- (3.4,0.1);
-	\draw (-2,4)   -- (3.8,0.2);
-	\draw (-1.6,4.1) -- (4.2,0.3);
-	\draw (-1.2,4.2) -- (4.6,0.4);
+  \draw[very thick] (-0.8,4.1) -- (0,0);
+  \draw[very thick] (-0.4,4.2) -- (0.4,0.1);
+  \draw[very thick] (-1.2,4) -- (0.8,0.2);
+%p3
+  \draw[very thick] (-0.8,4.1) -- (2,0);
+  \draw[very thick] (-0.4,4.2) -- (2.4,0.1);
+  \draw[very thick] (-1.2,4) -- (2.8,0.2);
 %p2
-	\draw (3.6,4.4) -- (3,0);
-	\draw (2,4)   -- (3.4,0.1);
-	\draw (2.4,4.1) -- (3.8,0.2);
-	\draw (2.8,4.2) -- (4.2,0.3);
-	\draw (3.2,4.3) -- (4.6,0.4);
-%p4
-	\draw (4.8,4.2) -- (3,0);
-	\draw (5.2,4.3) -- (3.4,0.1);
-	\draw (5.6,4.4) -- (3.8,0.2);
-	\draw (4,4)   -- (4.2,0.3);
-	\draw (4.4,4.1) -- (4.6,0.4);
-\foreach \x / \y / \z in {0/1/0,0.4/2/0.1,0.8/3/0.2,1.2/4/0.3,1.6/5/0.4}
+  \draw[very thick] (2.0,4.2) -- (2,0);
+  \draw[very thick] (1.2,4) -- (2.4,0.1);
+  \draw[very thick] (1.6,4.1) -- (2.8,0.2);
+%p2
+  \draw[very thick] (3.8,4.2) -- (2,0);
+  \draw[very thick] (3,4) -- (2.4,0.1);
+  \draw[very thick] (3.4,4.1) -- (2.8,0.2);
+\foreach \x / \z in {0/0,0.4/0.1,0.8/0.2}
 {
-	\draw[shift={(\x,\z)}] (2,4) -- (0,0);
-	\node[bit,shift={(\x,\z)}] at ( 2,4) [/tikz/label=above:3\y] {}; 
-	\node[bit,shift={(\x,\z)}] at (-2,4) [/tikz/label=above:2\y] {};
-	\node[bit,shift={(\x,\z)}] at (-4,4) [/tikz/label=above:1\y] {};
-	\node[bit,shift={(\x,\z)}] at ( 4,4) [/tikz/label=above:4\y] {}; 
-	\node[check,shift={(\x,\z)}] at ( 0,0) [/tikz/label=below:2\y] {}; 
-	\node[check,shift={(\x,\z)}] at ( 3,0) [/tikz/label=below:3\y] {}; 
-	\node[check,shift={(\x,\z)}] at (-3,0) [/tikz/label=below:1\y] {};
+\begin{scope}[xshift=\x cm,yshift=\z cm]
+\draw[very thick] (3,4) -- (-2,0);
+\draw[very thick] (1.2,4) -- (0,0);
+\draw[very thick] (-3,4) -- (2,0);
+\begin{scope}[xshift=1.2cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=-1.2cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=3cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=-3cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=2cm,yshift=0cm]
+\check
+\end{scope}
+\begin{scope}[xshift=-2cm,yshift=0cm]
+\check
+\end{scope}
+\check
+\end{scope}
 }
 \end{tikzpicture}
+\figurecaption{具有一定结构的LDPC码}
+\label{fig:structed}
 \end{center}
+
 \section{LDPC分组码的构造}
-设计码率为$R=b/c$的LDPC分组码的原型是一个二分图，有$c$个变量节点和$c-b$个校验节点。
+设计码率为$R=b/c$的LDPC分组码的原模图有$c$个变量节点和$c-b$个校验节点。
 它能生成不同码长的，设计码率为$R$，有相同的度分布的分组码。
-GF($q$)为含$q=2^m$个元素的有限域，其中$m$为在GF($q$)代表一个符号所需的位数。令$M$为原型叠加数。通过以下两步从原型的$(c-b)\times c$邻接矩阵$\mathbf{B}=[B_{i,j}]$构造码长为$n_{BC}=Mc$的$q$元LDPC分组码：
+GF($q$)为含$q=2^m$个元素的有限域，其中$m$为在GF($q$)代表一个符号所需的位数。
+令$M$为原模图叠加数。
+通过以下两步从原模图的$(c-b)\times c$邻接矩阵$\mathbf{B}=[B_{i,j}]$构造码长为$n_{BC}=Mc$的$q$元LDPC分组码：
 \begin{enumerate}
 \item 将$\mathbf{B}$中的非零元$B_{i,j}$替换为随机选择的$M \times M$置换矩阵，将$\mathbf{B}$中的零元$B_{i,j}$替换为$M \times M$零矩阵。此时得到对应于$\mathbf{B}$的二元校验矩阵$\mathbf{H}$；
 \item 将$\mathbf{H}$中非零元替换为从有限域GF($q$)中随机选取的元素，得到LDPC分组码的$q$元校验矩阵$\mathbf{H}_{BC}$。
 \end{enumerate}
 对于LDPC分组码，必须等待整个码块接受完毕才能执行置信传播解码算法。故$q$元LDPC分组码的解码延时为
-\[
+\begin{equation}
 T_{BC}=n_{BC}\cdot m = Mmc
-\]
+\end{equation}
+
 \section{LDPC卷积码的构造}
-LDPC卷积码也可以通过叠加原型来构造。
-原型的基本矩阵为$(c-b)\times c$的$\mathbf{B}$，以此构造码率为$R=b/c$的LDPC卷积码。首先构造$\mathbf{B}_{SC}$
+
+对于给定码率为$R=b/c$的LDPC卷积码，其定义为，存在校验矩阵$\mathbf{H}_{[\infty]}$使得无限长向量$\mathbf{v}_{[\infty]}$有$\mathbf{H}_{[\infty]}\mathbf{v}_{[\infty]}^\text{T} =\mathbf{0}_{[\infty]}$，其中
+\begin{equation}
+    \mathbf{H}_{[\infty]} = \left[
+          \begin{array}{ccccc}
+            \mathbf{H}_0(1) & & & & \\
+            \mathbf{H}_1(1) & \mathbf{H}_0(2) & & & \\
+            \vdots & \mathbf{H}_1(2) & \ddots & & \\
+            \mathbf{H}_{m_s}(1) & \vdots & \ddots & \mathbf{H}_0(t) & \\
+             & \mathbf{H}_{m_s}(2) & \ddots & \mathbf{H}_1(t) & \ddots\\
+             & & \ddots & \vdots & \ddots \\
+             & & & \mathbf{H}_{m_s}(t) & \ddots \\
+             & & & & \ddots
+          \end{array} \right]
+\end{equation}
+而$\mathbf{0}_{[\infty]}$是无限长零向量。
+$\mathbf{H}_i(t),i=0,1,\dots,m_s$为$(c-b)\times c$的矩阵满足以下条件：
+\begin{itemize}
+\item $\mathbf{H}_i(t)=\mathbf{0}$，当$i<0$和$i>m_s$，$\forall t \geq 1$；
+\item $\exists t\geq 0$使得$\mathbf{H}_{m_s}(t) \neq \mathbf{0}$；
+\item $\forall t \geq 1,\mathbf{H}_0(1)$满秩。
+\end{itemize}
+
+其中参数$m_s$称为LDPC卷积码的记忆因子。
+$\nu = (m_s+1)c$为LDPC卷积码的限制长度。
+对于$\forall t,\tau>1,\mathbf{H}_i(t) = \mathbf{H}_i(t+\tau),\forall i = 0,1,\dots,m_s$的情况，我们称LDPC卷积码具有周期性。
+若$\tau=1$，称LDPC卷积码为时不变的。
+另外，截尾的LDPC卷积码的校验矩阵长度有限，即在$L$时刻终止，如
+\begin{equation}
+    \mathbf{H}_{[\infty]} = \left[
+          \begin{array}{cccc}
+            \mathbf{H}_0(1) & & & \\
+            \mathbf{H}_1(1) & \mathbf{H}_0(2) & & \\
+            \vdots & \mathbf{H}_1(2) & \ddots & \\
+            \mathbf{H}_{m_s}(1) & \vdots & \ddots & \mathbf{H}_0(L) \\
+             & \mathbf{H}_{m_s}(2) & \ddots & \mathbf{H}_1(L) \\
+             & & \ddots & \vdots \\
+             & & & \mathbf{H}_{m_s}(L)
+          \end{array} \right]
+\end{equation}
+
+下面通过原模图来构造截尾的时不变的LDPC卷积码。
+设原模图的基本矩阵为$(c-b)\times c$的$\mathbf{B}$。
+首先构造$\mathbf{B}_{SC}$
 \begin{equation}
     \mathbf{B}_{SC} = \left[
           \begin{array}{ccc}
@@ -164,69 +303,144 @@ LDPC卷积码也可以通过叠加原型来构造。
              & & \ddots 
           \end{array} \right]
 \end{equation}
-其中$m_s$为记忆因子，即当前原型与前一个原型相连的边数。$\mathbf{B}_0 , \mathbf{B}_1 , \dots , \mathbf{B}_{m_s}$为$(c-b)\times c$矩阵，且满足
-\[
+其中$m_s$在示意图中为当前原模图与前一个原模图相连的边数。$\mathbf{B}_0 , \mathbf{B}_1 , \dots , \mathbf{B}_{m_s}$为$(c-b)\times c$矩阵，且满足
+\begin{equation}
 \sum^{m_s}_{i=0} \mathbf{B}_i = \mathbf{B}
-\]
+\end{equation}
+
 然后将$\mathbf{B}_{SC}$中的非零元替换为随机选择的$M \times M$置换矩阵，将$\mathbf{B}_{SC}$中的零元替换为$M \times M$零矩阵，得到LDPC卷积码校验矩阵$\mathbf{H}_{SC}$。
-最后将$\mathbf{H}_{SC}$中的非零元替换为从有限域GF($q$)中随机选取的元素，得到LDPC卷积码的$q$元校验矩阵$\mathbf{H}_{BC}$，其限制长度（决定了非零对角带的最大宽度），为$v_s=(m_s+1)Mc$。
+最后将$\mathbf{H}_{SC}$中的非零元替换为从有限域GF($q$)中随机选取的元素，得到LDPC卷积码的$q$元校验矩阵$\mathbf{H}_{SC}$，其限制长度为$v_s=(m_s+1)Mc$。
 
-本文为简单起见，采用$m_s=1$，并且只考虑正则$(d_v,d_c)$LDPC卷积码，即$\mathbf{H}_{SC}$中每行重量为$d_c$，每列重量为$d_v$。
-同时限定随机选择置换矩阵的方法如下。
-选择两个$(c-b)\times c$矩阵$\mathbf{B}_0$和$\mathbf{B}_1$，使得$\mathbf{B}_0 + \mathbf{B}_1$为正则$(d_v,d_c)$矩阵。LDPC分组码的基本矩阵为
-\begin{equation}
-    \mathbf{B}_{BC} = \left[
-          \begin{array}{cc}
-            \mathbf{B}_0 & \mathbf{B}_1\\
-            \mathbf{B}_1 & \mathbf{B}_0
-          \end{array} \right]_{2(c-b)\times 2c}
-\end{equation}
-然后使用第二节的原型叠加方法构造LDPC分组码的校验矩阵
-\begin{equation}
-    \mathbf{H}_{BC} = \left[
-          \begin{array}{cc}
-            \mathbf{H}_0 & \mathbf{H}_1\\
-            \mathbf{H}_1 & \mathbf{H}_0
-          \end{array} \right]_{2(c-b)M \times 2cM}
-\end{equation}
-对于LDPC卷积码，使用相同的$\mathbf{B}_0$和$\mathbf{B}_1$，得到正则$(d_v,d_c)$LDPC卷积码的基本矩阵为
-\begin{equation}
-    \mathbf{B}_{SC} = \left[
-          \begin{array}{ccccc}
-            \mathbf{B}_0 & & & & \\
-            \mathbf{B}_1 & \mathbf{B}_0 & & & \\
-             & \mathbf{B}_1 & \mathbf{B}_0 & & \\
-             & & \mathbf{B}_1 & \mathbf{B}_0 & \\
-             & & & \mathbf{B}_1 & \ddots \\
-             & & & & \ddots
-          \end{array} \right]
-\end{equation}
-然后使用原型叠加方法构造LDPC卷积码的校验矩阵
-\begin{equation}
-    \mathbf{H}_{SC} = \left[
-          \begin{array}{ccccc}
-            \mathbf{H}_0 & & & & \\
-            \mathbf{H}_1 & \mathbf{H}_0 & & & \\
-             & \mathbf{H}_1 & \mathbf{H}_0 & & \\
-             & & \mathbf{H}_1 & \mathbf{H}_0 & \\
-             & & & \mathbf{H}_1 & \ddots \\
-             & & & & \ddots
-          \end{array} \right]
-\end{equation}
-基于以上构造规则，可以使用其他的基本矩阵（见下表）构造LDPC分组码校验矩阵$\mathbf{H}_{BC}$与LDPC卷积码校验矩阵$\mathbf{H}_{SC}$。当原型叠加数为$M$，有限域元素个数为$q=2^m$时，LDPC分组码的码长和LDPC卷积码的限制长度都等于$2Mmc$。
+图\ref{fig:LDPCCC}为通过原模图叠加方法构造LDPC卷积码的示意图。
+首先复制几次(3,6)-正则LDPC码的原模图，设定记忆因子$m_s=1$，然后将原模图之间连接起来。
+其中，原模图的基本矩阵为$ \mathbf{B} = [\begin{array}{cc} 3&3 \end{array}]$，使用到的组成矩阵为$\mathbf{B}_0 = [\begin{array}{cc} 2&1 \end{array}]$,$\mathbf{B}_1 = [\begin{array}{cc} 1&2 \end{array}]$。
+
 \begin{center}
-\tablecaption{构造LDPC分组码和LDPC卷积码的组成矩阵}
-\begin{tabular}{c|c|c}
- \hline
-码 & 组成矩阵 &码长/限制长度 \\ \hline
-(2,4)-正则 & 
-$\mathbf{B}_0 = \mathbf{B}_1 = [\begin{array}{cc} 1&1 \end{array}]$ & 4Mm \\ \hline
-(3,6)-正则 & 
- $\mathbf{B}_0 = [\begin{array}{cc} 2&1 \end{array}]$,$\mathbf{B}_1 = [\begin{array}{cc} 1&2 \end{array}]$ & 4Mm \\ \hline
-(3,9)-正则 & 
- $\mathbf{B}_0 = [\begin{array}{ccc} 1&2&2 \end{array}]$,$\mathbf{B}_1 = [\begin{array}{ccc} 2&2&1 \end{array}]$ & 6Mm \\ \hline
-(3,12)-正则 & 
- $\mathbf{B}_0 = [\begin{array}{cccc} 1&1&2&2 \end{array}]$,$\mathbf{B}_1 = [\begin{array}{cccc} 2&2&1&1 \end{array}]$ & 8Mm \\ \hline
-
-\end{tabular}
+\def\linkdoub{\draw [double distance=1mm, very thick] (0,0)--}
+\def\linksing{\draw [very thick] (0,0)--}
+\def\check{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (0,3.5pt)--(0,-3.5pt);
+    \draw [very thick] (3.5pt,0)--(-3.5pt,0);
+}
+\def\bit{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (-3.2pt,2.2pt)--(3.2pt,2.2pt);
+    \draw [very thick] (-3.2pt,-2.2pt)--(3.2pt,-2.2pt);
+}
+\def\thetaone{90}
+\def\thetatwo{-90}
+\def\thetathree{60}
+\def\thetafour{-60}
+\def\armLength{0.9}
+\def\symbolDist{1}
+\begin{tikzpicture}
+\foreach \x in {0.8,1.6,2.4,3.2,4}
+{
+\begin{scope}[shift=(0:\x)]
+\linkdoub(\thetaone:\armLength);
+\linksing(\thetaone:\armLength);
+\linksing(\thetatwo:\armLength);
+\begin{scope}[shift=(\thetaone:\symbolDist)]
+\bit
+\end{scope}
+\begin{scope}[shift=(\thetatwo:\symbolDist)]
+\linkdoub(\thetaone:\armLength);
+\linksing(\thetaone:\armLength);
+\bit
+\end{scope}
+\check
+\end{scope}
+}
+\node at (4.7,0.9) {\ldots};
+\node at (4.7,0) {\ldots};
+\node at (4.7,-0.9) {\ldots};
+\draw [->,very thick] (5.3,0) -- (6,0);
+\begin{scope}[shift=(0:5.6)]
+\foreach \x in {1,2,...,5}
+{
+	\begin{scope}[shift=(0:\x)]
+		\linkdoub(\thetathree:\armLength);
+		\linksing(\thetafour:\armLength);
+		\check
+		\begin{scope}[shift=(\thetathree:\symbolDist)]
+		\linksing(\thetafour:\armLength);
+		\bit
+		\end{scope}
+		\begin{scope}[shift=(\thetafour:\symbolDist)]
+		\linkdoub(\thetathree:\armLength);
+		\bit
+		\end{scope}
+	\end{scope}
+}
+\node at (6.5,0.9) {\ldots};
+\node at (6.5,0) {\ldots};
+\node at (6.5,-0.9) {\ldots};
+\end{scope}
+\end{tikzpicture}
+\figurecaption{构造LDPC卷积码}
+\label{fig:LDPCCC}
 \end{center}
+
+
+
+
+% 本文为简单起见，采用$m_s=1$，并且只考虑正则$(d_v,d_c)$LDPC卷积码，即$\mathbf{H}_{SC}$中每行重量为$d_c$，每列重量为$d_v$。
+% 同时限定随机选择置换矩阵的方法如下。
+% 选择两个$(c-b)\times c$矩阵$\mathbf{B}_0$和$\mathbf{B}_1$，使得$\mathbf{B}_0 + \mathbf{B}_1$为正则$(d_v,d_c)$矩阵。LDPC分组码的基本矩阵为
+% \begin{equation}
+%     \mathbf{B}_{BC} = \left[
+%           \begin{array}{cc}
+%             \mathbf{B}_0 & \mathbf{B}_1\\
+%             \mathbf{B}_1 & \mathbf{B}_0
+%           \end{array} \right]_{2(c-b)\times 2c}
+% \end{equation}
+% 然后使用第二节的原模图叠加方法构造LDPC分组码的校验矩阵
+% \begin{equation}
+%     \mathbf{H}_{BC} = \left[
+%           \begin{array}{cc}
+%             \mathbf{H}_0 & \mathbf{H}_1\\
+%             \mathbf{H}_1 & \mathbf{H}_0
+%           \end{array} \right]_{2(c-b)M \times 2cM}
+% \end{equation}
+% 对于LDPC卷积码，使用相同的$\mathbf{B}_0$和$\mathbf{B}_1$，得到正则$(d_v,d_c)$LDPC卷积码的基本矩阵为
+% \begin{equation}
+%     \mathbf{B}_{SC} = \left[
+%           \begin{array}{ccccc}
+%             \mathbf{B}_0 & & & & \\
+%             \mathbf{B}_1 & \mathbf{B}_0 & & & \\
+%              & \mathbf{B}_1 & \mathbf{B}_0 & & \\
+%              & & \mathbf{B}_1 & \mathbf{B}_0 & \\
+%              & & & \mathbf{B}_1 & \ddots \\
+%              & & & & \ddots
+%           \end{array} \right]
+% \end{equation}
+% 然后使用原模图叠加方法构造LDPC卷积码的校验矩阵
+% \begin{equation}
+%     \mathbf{H}_{SC} = \left[
+%           \begin{array}{ccccc}
+%             \mathbf{H}_0 & & & & \\
+%             \mathbf{H}_1 & \mathbf{H}_0 & & & \\
+%              & \mathbf{H}_1 & \mathbf{H}_0 & & \\
+%              & & \mathbf{H}_1 & \mathbf{H}_0 & \\
+%              & & & \mathbf{H}_1 & \ddots \\
+%              & & & & \ddots
+%           \end{array} \right]
+% \end{equation}
+% 基于以上构造规则，可以使用其他的基本矩阵（见下表）构造LDPC分组码校验矩阵$\mathbf{H}_{BC}$与LDPC卷积码校验矩阵$\mathbf{H}_{SC}$。当原模图叠加数为$M$，有限域元素个数为$q=2^m$时，LDPC分组码的码长和LDPC卷积码的限制长度都等于$2Mmc$。
+% \begin{center}
+% \tablecaption{构造LDPC分组码和LDPC卷积码的组成矩阵}
+% \begin{tabular}{c|c|c}
+%  \hline
+% 码 & 组成矩阵 &码长/限制长度 \\ \hline
+% (2,4)-正则 & 
+% $\mathbf{B}_0 = \mathbf{B}_1 = [\begin{array}{cc} 1&1 \end{array}]$ & 4Mm \\ \hline
+% (3,6)-正则 & 
+%  $\mathbf{B}_0 = [\begin{array}{cc} 2&1 \end{array}]$,$\mathbf{B}_1 = [\begin{array}{cc} 1&2 \end{array}]$ & 4Mm \\ \hline
+% (3,9)-正则 & 
+%  $\mathbf{B}_0 = [\begin{array}{ccc} 1&2&2 \end{array}]$,$\mathbf{B}_1 = [\begin{array}{ccc} 2&2&1 \end{array}]$ & 6Mm \\ \hline
+% (3,12)-正则 & 
+%  $\mathbf{B}_0 = [\begin{array}{cccc} 1&1&2&2 \end{array}]$,$\mathbf{B}_1 = [\begin{array}{cccc} 2&2&1&1 \end{array}]$ & 8Mm \\ \hline
+
+% \end{tabular}
+% \end{center}

@@ -1,2 +1,166 @@
 \chapter{模拟仿真结果}
-本文模拟仿真的环境为BI-AWGN信道中使用BPSK调制。对于$q$元LDPC分组码，采用FFT-QSPA解码算法以及停止规则为最大迭代次数$I_{max}=100$。对于$q$元LDPC卷积码，滑动窗口解码使用FFT-QSPA解码算法，停止规则为最大迭代次数$I_{max}=100$或者误符号率SER达到$10^{-6}$。
+本文模拟仿真的环境为翻转概率为$\epsilon$的BSC信道。
+对于$q$元LDPC分组码，采用QSPA解码算法，停止规则为最大迭代次数$I_{max}=100$。
+对于$q$元LDPC卷积码，滑动窗口解码使用QSPA解码算法，停止规则为最大迭代次数$I_{max}=100$或者误比特率BER达到$10^{-5}$。
+\section{LDPC分组码码长与LDPC卷积码限制长度相等}
+构造$q$元LDPC分组码，使其码长$n_{BC}=2Mc$。
+构造$q$元LDPC卷积码，其限制长度$v_s=(m_s+1)Mc=2Mc$。
+在$n_{BC}=v_s=2Mc$的条件下进行性能上的比较。
+\begin{center}
+\pgfplotsset{compat=1.13}
+\begin{tikzpicture} 
+\begin{axis}[
+    xlabel={原模图复制数$M$},
+    ylabel={所需翻转概率$\epsilon$},
+    grid=major,
+    legend style={
+        font=\tiny,
+        cells={anchor=east},
+        legend pos=north west,
+    },
+]
+\addplot[color=red,mark=square] table {data_d15.dat};
+\addplot[color=red,mark=triangle] table {data_d16.dat};
+\addplot[color=red,mark=o] table {data_d17.dat};
+\addplot[color=blue,mark=square] table {data_d18.dat};
+\addplot[color=blue,mark=triangle] table {data_d19.dat};
+\addplot[color=blue,mark=o] table {data_d20.dat};
+\legend{2-ary LDPC-BC,
+        4-ary LDPC-BC,
+        8-ary LDPC-BC,
+        2-ary LDPC-CC,
+        4-ary LDPC-CC,
+        8-ary LDPC-CC}
+\end{axis}
+\end{tikzpicture}
+\figurecaption{使用$R=1/2$的(2,4)正则原模图构造}
+\label{fig:expone}
+\end{center}
+
+图\ref{fig:expone}展示的是$q$元LDPC分组码及$q$元LDPC卷积码解码时误比特率BER达到$10^{-4}$所需翻转概率$\epsilon$与原模图复制数$M$之间的关系。
+$q$元LDPC分组码及$q$元LDPC卷积码都由码率为$R=1/2$的(2,4)正则原模图构造。
+$q$元LDPC卷积码的滑窗解码器的窗口大小为$W=12$。
+
+从图\ref{fig:expone}可以看出，$q$元LDPC分组码及$q$元LDPC卷积码的性能都随着原模图复制数$M$增大而提高。
+同时复制数$M$较小时，相对于$q$元LDPC分组码，$q$元LDPC卷积码获得“卷积优势”，但是这种优势随$M$增大而减小。
+比如当$M=100$时，8元LDPC卷积码所需的$\epsilon$比8元LDPC分组码的$\epsilon$大0.01，而$M=400$时，8元LDPC卷积码的$\epsilon$仅比8元LDPC分组码的$\epsilon$大0.001。
+
+这个结果与LDPC卷积码阈值渐近分析（即$M$趋向无穷）相一致，也即LDPC卷积码的解码阈值会随着$M$的增大，逐渐趋向用于构建该LDPC卷积码的LDPC分组码的解码阈值。
+
+\begin{center}
+\pgfplotsset{compat=1.13}
+\begin{tikzpicture} 
+\begin{axis}[
+    xlabel={原模图复制数$M$},
+    ylabel={所需翻转概率$\epsilon$},
+    grid=major,
+    legend style={
+        font=\tiny,
+        cells={anchor=east},
+        legend pos=north west,
+    },
+]
+\addplot[color=red,mark=square] table {data_d21.dat};
+\addplot[color=red,mark=triangle] table {data_d22.dat};
+\addplot[color=red,mark=o] table {data_d23.dat};
+\addplot[color=blue,mark=square] table {data_d24.dat};
+\addplot[color=blue,mark=triangle] table {data_d25.dat};
+\addplot[color=blue,mark=o] table {data_d26.dat};
+\legend{2-ary LDPC-BC,
+        4-ary LDPC-BC,
+        8-ary LDPC-BC,
+        2-ary LDPC-CC,
+        4-ary LDPC-CC,
+        8-ary LDPC-CC}
+\end{axis}
+\end{tikzpicture}
+\figurecaption{使用$R=1/2$的(3,6)正则原模图构造}
+\label{fig:exptwo}
+\end{center}
+
+图\ref{fig:exptwo}描述的是$q$元LDPC分组码及$q$元LDPC卷积码解码时误比特率BER达到$10^{-4}$所需翻转概率$\epsilon$与原模图复制数$M$之间的关系。
+$q$元LDPC分组码及$q$元LDPC卷积码都由$R=1/2$的(3,6)正则原模图构造。
+图\ref{fig:exptwo}与图\ref{fig:expone}类似，都表现了$q$元LDPC分组码及$q$元LDPC卷积码的性能随着$M$增大而提高的特性。
+同时$q$元LDPC卷积码的“卷积优势”随$M$增大而减小。
+
+另外，对比图\ref{fig:exptwo}与图\ref{fig:expone}可以发现，使用(3,6)正则原模图比使用(2,4)正则原模图构造LDPC码的解码性能更好。
+
+
+\section{LDPC分组码与LDPC卷积码的解码延时相等}
+除了解码性能以外，信道编码的解码延时对于设计高速通信系统来说十分重要。
+无线通信如Wi-Fi，实时语音或视频通信，军事通信系统等对解码延时的要求比较苛刻。
+下面考虑$q$元LDPC分组码解码延时等于$q$元LDPC卷积码解码延时的情况。
+$q$元LDPC分组码的延时$T_{BC}=M_{BC}mc$，及$q$元LDPC卷积码的延时$T_{CC}=WM_{CC}mc$。
+为使$T_{BC}=T_{CC}$，只需令$M_{BC} = WM_{CC}$。
+
+\begin{center}
+\pgfplotsset{compat=1.13}
+\begin{tikzpicture}
+\begin{semilogyaxis}[
+    xlabel={反转概率$\epsilon$},
+    ylabel={BER},
+    grid=major,
+    legend style={
+        font=\tiny,
+        cells={anchor=west},
+        legend pos=south east,
+    },
+    ymin=0.00001,
+    ymax=1,
+]
+\addplot[color=red,mark=square] table {data_d1.dat};
+\addplot[color=red,mark=triangle] table {data_d2.dat};
+\addplot[color=blue,mark=o] table {data_d3.dat};
+\addplot[color=blue,mark=square] table {data_d4.dat};
+\addplot[color=blue,mark=triangle] table {data_d5.dat};
+\addplot[color=blue,mark=diamond] table {data_d6.dat};
+\legend{LDPC-BC $M=192$\\
+        LDPC-BC $M=384$\\
+        LDPC-CC $M = 32,W =12$\\
+        LDPC-CC $M = 64,W =6$\\
+        LDPC-CC $M = 64,W =12$\\
+        LDPC-CC $M = 128,W =6$\\}
+\end{semilogyaxis}
+\end{tikzpicture}
+\figurecaption{使用$R=1/2$的(3,6)8元正则原模图构造}
+\label{fig:perone}
+\begin{tikzpicture} 
+\begin{axis}[
+    xlabel={解码延时(bits)},
+    ylabel={所需翻转概率$\epsilon$},
+    grid=major,
+    legend style={
+        font=\tiny,
+        cells={anchor=west},
+        legend pos=south east,
+    },
+    xmin=0,
+]
+\addplot table {data_d7.dat};
+\addplot table {data_d8.dat};
+\addplot table {data_d9.dat};
+\addplot table {data_d10.dat};
+\legend{LDPC-BC,$M = 32,64,128,192,288,384,576$\\
+        LDPC-CC,$M = 32,W =2,3,\dots,12$\\
+        LDPC-CC,$M = 64,W =2,3,\dots,12$\\
+        LDPC-CC,$M = 128,W =2,3,\dots,8$\\}
+\end{axis}
+\end{tikzpicture}
+\figurecaption{解码延时与所需翻转概率之间的关系}
+\label{fig:pertwo}
+\end{center}
+
+图\ref{fig:perone}中8元LDPC分组码及8元LDPC卷积码都由码率为$R=1/2$的(3,6)正则原模图构造。
+从图\ref{fig:perone}可以看出，8元LDPC卷积码的性能优于8元LDPC分组码。
+另外，从图\ref{fig:perone}可以看出，由$M_{CC}=64,W =6$生成的LDPC卷积码的性能优于由$M_{CC}=32,W =12$生成的LDPC卷积码，由$M_{CC}=128,W =6$生成的LDPC卷积码的性能优于由$M_{CC}=64,W =12$生成的LDPC卷积码(它们的解码延时相等)。
+也就是说，选择相对小的窗口$W$，同时选择大的复制数$M_{CC}$补偿解码延时，能获得更好的解码性能。
+
+图\ref{fig:pertwo}在GF($8$)上比较要达到相同的误比特率所需的翻转概率与解码延时之间的关系。
+其中8元LDPC分组码及8元LDPC卷积码都由码率为$R=1/2$的(3,6)正则原模图构造。
+
+从图\ref{fig:pertwo}可以看出，当固定原模图复制数$M_{CC}$时，LDPC卷积码性能随窗口大小$W$增加而提高，但是其解码延时$T_{CC}$却增加了。
+
+另外，在一定范围内大的复制数$M_{CC}$与小的窗口大小$W$的组合有更好的性能。
+比如，解码延时$T_{CC}=2304$时，$M_{CC}=64$与$W=6$的LDPC卷积码的性能比$M_{CC}=32$与$W=12$的LDPC卷积码的性能更好。
+然而，复制数$M_{CC}$越大与窗口$W$越小不一定有最好性能。比如，解码延时$T_{CC}=2304$时，$M_{CC}=128$与$W=3$的LDPC卷积码的性能反而比$M_{CC}=64$与$W=6$的LDPC卷积码的性能差。
+由此可见，解码延时确定时，要综合考虑复制数$M_{CC}$与窗口大小$W$的影响。

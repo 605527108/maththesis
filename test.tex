@@ -1,0 +1,27 @@
+\documentclass{article}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.13}
+\begin{document}
+\begin{tikzpicture} 
+\begin{axis}[
+    xlabel={解码延时(bits)},
+    ylabel={所需翻转概率$\epsilon$},
+    grid=major,
+    legend style={
+    	font=\tiny,
+	    cells={anchor=west},
+        legend pos=south east,
+    },
+    xmin=0,
+]
+\addplot table {data_d7.dat};
+\addplot table {data_d8.dat};
+\addplot table {data_d9.dat};
+\addplot table {data_d10.dat};
+\legend{LDPC-BC,$M = 32,64,128,192,288,384,576$\\
+		LDPC-CC,$M = 32,W =2,3,\dots,12$\\
+		LDPC-CC,$M = 64,W =2,3,\dots,12$\\
+		LDPC-CC,$M = 128,W =2,3,\dots,8$\\}
+\end{axis}
+\end{tikzpicture}
+\end{document}
