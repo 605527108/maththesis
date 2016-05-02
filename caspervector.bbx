@@ -58,6 +58,7 @@
 \renewcommand{\bibendnotewrapper}[1]{\bibsentence #1\bbx@cnperiod}
 \renewcommand{\bibfootnotewrapper}[1]{\bibsentence #1\bbx@cnperiod}
 
+\DeclareFieldFormat*{conferencename}{#1}
 \DeclareFieldFormat*{booktitle}{\mkbibemph{#1}}
 \DeclareFieldFormat*{journaltitle}{\mkbibemph{#1}}
 \DeclareFieldFormat*{title}{\mkbibemph{#1}}
@@ -131,12 +132,10 @@
 	\usebibmacro{author+others}\setunit{\bbx@ceperiod}%
 	\newblock
 	\usebibmacro{title}\setunit*{\bbx@cespace}%
-	\usebibmacro{type}\setunit{\bbx@ceperiod}%
+	\usebibmacro{type}%
 	\newblock
 	\usebibmacro{cein:}%
-	\newblock
-	\printnames{bookauthor}\setunit*{\bbx@ceperiod}%
-	\newblock
+	\printnames{bookauthor}\setunit*{\bbx@cecolon}%
 	\printfield{booktitle}\setunit{\bbx@ceperiod}%
 	\newblock
 	\printlist{location}\setunit*{\bbx@cecolon}%
