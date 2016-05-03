@@ -4,27 +4,25 @@
 \begin{document}
 \begin{tikzpicture} 
 \begin{axis}[
-    xlabel={解码延时(bits)},
-    ylabel={所需翻转概率$\epsilon$},
+    xlabel={com com per bit},
+    ylabel={GFQ},
     grid=major,
     legend style={
-    	font=\tiny,
-	    cells={anchor=west},
-        legend pos=south east,
+        font=\tiny,
+        cells={anchor=west},
+        legend pos=north west,
     },
     xmin=0,
+    ymin=0,
 ]
-\addplot table {data_d7.dat};
-\addplot table {data_d8.dat};
-\addplot table {data_d9.dat};
-\addplot table {data_d10.dat};
-\legend{LDPC-BC,$M = 32,64,128,192,288,384,576$\\
-		LDPC-CC,$M = 32,W =2,3,\dots,12$\\
-		LDPC-CC,$M = 64,W =2,3,\dots,12$\\
-		LDPC-CC,$M = 128,W =2,3,\dots,8$\\}
+\addplot table {data_d27.dat};
+\addplot table {data_d28.dat};
+\addplot table {data_d29.dat};
+\addplot table {data_d30.dat};
+\legend{4608 LDPC-BC\\
+        6912 LDPC-BC\\
+        4608 LDPC-CC\\
+        6912 LDPC-CC\\}
 \end{axis}
 \end{tikzpicture}
-\begin{equation}
-\mathcal{O} \left(\frac{T_{BC}}{m}d_vq+\frac{T_{BC}}{m}\left(1-R\right)d_cqm\right)I_{BC}=\mathcal{O}\left(\left(\frac{d_v}{m}+d_v\right)qT_{BC}\right)I_{BC}
-\end{equation}
 \end{document}
