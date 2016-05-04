@@ -180,7 +180,7 @@ $q$元LDPC分组码的延时$T_{BC}=M_{BC}mc$，及$q$元LDPC卷积码的延时$
 从表\ref{table:filppingforbsc}可以看出，当解码延时确定时，非二元的LDPC卷积码的解码性能优于q元LDPC分组码以及二元LDPC卷积码的解码性能。
 与q元LDPC分组码相反，q元LDPC卷积码误比特率BER达到$10^{-4}$所需翻转概率$\epsilon$随$q$的增加而增大。
 这种现象与\parencite{6874959}中的迭代译码阈值结果相一致，即，当$q$增加时，(3,6)正则q元LDPC卷积码的解码阈值逐趋向到信道容量，而(3,6)正则q元LDPC分组码的解码阈值开始偏离信道容量。
-我们还能从表中发现，对于解码延时为2304比特，(3,6)正则二元LDPC卷积码误比特率BER达到$10^{-4}$所需翻转概率$\epsilon$要低于，(3,6)正则二元LDPC分组码的翻转概率。
+我们还能从表中发现，对于解码延时为2304比特，(3,6)正则二元LDPC卷积码误比特率BER达到$10^{-4}$所需翻转概率$\epsilon$，要低于(3,6)正则二元LDPC分组码的翻转概率。
 这是由于限制长度短的二元LDPC卷积码存在错误扩散现象。
 在高误比特率或者更大解码延时的条件下，以上的错误扩散现象将会消失，
 从表中也可以发现，当解码延时大于2304比特时，二元LDPC卷积码解码性能比二元LDPC分组码更好。
@@ -240,8 +240,8 @@ Pusane等人在\parencite{5695133}中分析了，相对于二元LDPC分组码，
 \begin{center}
 \begin{tikzpicture} 
 \begin{axis}[
-    xlabel={com com per bit},
-    ylabel={GFQ},
+    xlabel={GF($q$)},
+    ylabel={解码每一比特的计算复杂度},
     grid=major,
     legend style={
         font=\tiny,
@@ -261,11 +261,11 @@ Pusane等人在\parencite{5695133}中分析了，相对于二元LDPC分组码，
         6912 LDPC-CC\\}
 \end{axis}
 \end{tikzpicture}
-\figurecaption{每解码一比特的计算复杂度与解码延时的关系}
+\figurecaption{每解码一比特的计算复杂度与GF($q$)的关系}
 \label{fig:perbit}
 \end{center}
 
-图\ref{fig:perbit}展示了，(3,6)正则q元LDPC卷积码与(3,6)正则q元LDPC分组码每解码一比特的计算复杂度与解码延时的关系。
+图\ref{fig:perbit}展示了，(3,6)正则q元LDPC卷积码与(3,6)正则q元LDPC分组码每解码一比特的计算复杂度与GF($q$)的关系。
 我们可以观察到，LDPC卷积码与LDPC分组码的解码计算复杂度都随$q$的增大而指数增加。
 另外，在相同的GF($q$)中，LDPC卷积码的复杂度比LDPC分组码的复杂度高35\%。
 同时我们还可以看到，在相等解码延时的条件下，二元LDPC卷积码的复杂度比4元LDPC分组码的复杂度高10\%，而4元LDPC卷积码的复杂度比二元LDPC分组码的复杂度高80\%。
