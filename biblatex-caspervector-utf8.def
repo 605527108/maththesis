@@ -36,7 +36,7 @@
 	references = {参考文献}
 }
 
-\newbibmacro*{cein:}{\printtext{\bbx@cegen{出自}{//}}}
+\newbibmacro*{cein:}{\printtext{\bbx@cegen{出自}{.}}}
 \newbibmacro*{cebyauthor}{%
 	\ifnameundef{author}{}{%
 		\bbx@cegen%

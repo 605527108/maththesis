@@ -62,8 +62,8 @@
 \DeclareFieldFormat*{booktitle}{\mkbibemph{#1}}
 \DeclareFieldFormat*{journaltitle}{\mkbibemph{#1}}
 \DeclareFieldFormat*{title}{\mkbibemph{#1}}
-\DeclareFieldFormat*{year}{\mkbibbold{#1}}
-\DeclareFieldFormat*{volume}{\mkbibemph{#1}}
+\DeclareFieldFormat*{year}{#1}
+\DeclareFieldFormat*{volume}{#1}
 \DeclareFieldFormat*{pages}{#1}
 \DeclareFieldFormat*{url}{\url{#1}}
 \DeclareFieldFormat*{urldate}{#1}
@@ -96,7 +96,7 @@
 }
 \newbibmacro*{year/date}{%
 	\ifthenelse{\iffieldundef{month} \and \iffieldundef{day}}%
-	{\printfield{year}}{\printdate}%
+	{\printfield{year}}{\printfield{month}\setunit*{\bbx@cecomma}\printfield{year}}%
 }
 \newbibmacro*{(year+volume+number)/date}{%
 	\ifthenelse{\iffieldundef{month} \and \iffieldundef{day}}%
@@ -131,7 +131,7 @@
 	\newblock
 	\usebibmacro{author+others}\setunit{\bbx@ceperiod}%
 	\newblock
-	\usebibmacro{title}\setunit*{\bbx@cespace}%
+	\usebibmacro{title}\setunit*{}%
 	\usebibmacro{type}%
 	\newblock
 	\usebibmacro{cein:}%
@@ -154,7 +154,7 @@
 	\newblock
 	\usebibmacro{author+others}\setunit{\bbx@ceperiod}%
 	\newblock
-	\usebibmacro{journaltitle/title}\setunit*{\addspace}%
+	\usebibmacro{journaltitle/title}\setunit*{}%
 	\usebibmacro{type}\setunit{\bbx@ceperiod}%
 	\newblock
 	\usebibmacro{(year+volume+number)/date}\setunit{\bbx@ceperiod}%
