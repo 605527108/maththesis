@@ -1,11 +1,835 @@
-\documentclass{article}
+\documentclass{beamer}
+\usepackage{ctex}
+\usepackage{tikz}
 \usepackage{pgfplots}
-\pgfplotsset{compat=1.13}
+\usepackage{beamerthemesplit}
+\title{GF(q)上的LDPC分组码和LDPC卷积码的比较}
+\author{孙卓豪}
+\institute{南开大学 \& 电子信息科学与技术}
+\date{\today}
+
 \begin{document}
+\usetikzlibrary{shapes,snakes}
+\usetikzlibrary{arrows, decorations.markings}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+    \titlepage
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \tableofcontents
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+\section{本论文的简要介绍}
+\subsection{研究目的}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{本论文的简要介绍}
+    \begin{block}{研究目的}
+    LDPC分组码是一类接近香农极限的编码。
+    基于原模图构造LDPC分组码具有规则的空间结构。
+    类似的，基于原模图构造LDPC卷积码具有规则的空间结构，
+    且与LDPC分组码的结构类似。
+    这两种LDPC码解码时各有特点。
+    本文的目的就是在构造方法类似的前提下，研究两者解码时各方面的差异。
+    \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{主要工作}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{本论文的简要介绍}
+    \begin{block}{主要工作}
+    本文的主要工作有：
+    \begin{itemize}
+        \item 描述LDPC卷积码与LDPC分组码的构建过程；
+        \item 描述LDPC卷积码与LDPC分组码的解码算法，计算两种算法的解码延时；
+        \item 调整几类参数，比较LDPC卷积码与LDPC分组码的性能。
+    \end{itemize}
+    \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{LDPC卷积码与LDPC分组码的构造}
+\subsection{原模图与基本图}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{LDPC卷积码与LDPC分组码的构造}
+        \begin{block}{原模图与基本图}
+            \begin{center}
+\def\check{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (0,3.5pt)--(0,-3.5pt);
+    \draw [very thick] (3.5pt,0)--(-3.5pt,0);
+}
+\def\bit{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (-3.2pt,2.2pt)--(3.2pt,2.2pt);
+    \draw [very thick] (-3.2pt,-2.2pt)--(3.2pt,-2.2pt);
+}
+\begin{tikzpicture}
+\draw [very thick] (-3,2.5) -- (-2,0);
+\draw [very thick] (3,2.5) -- (-2,0);
+\draw [very thick] (-1,2.5) -- (0,0);
+\draw [very thick] (1,2.5) -- (0,0);
+\draw [very thick] (-3,2.5) -- (2,0);
+\draw [very thick] (-1,2.5) -- (2,0);
+\draw [very thick] (1,2.5) -- (2,0);
+\draw [very thick] (3,2.5) -- (2,0);
+\begin{scope}[xshift=1cm,yshift=2.5cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=-1cm,yshift=2.5cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=3cm,yshift=2.5cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=-3cm,yshift=2.5cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=2cm,yshift=0cm]
+\check
+\end{scope}
+\begin{scope}[xshift=-2cm,yshift=0cm]
+\check
+\end{scope}
+\check
+\draw [<->,thick] (3.3,1.25) -- (4.3,1.25);
+\node at (7,1.25) (steptwo){
+    \begin{minipage}{0.40\textwidth}
+        \begin{equation*}
+    H_b = \left(
+      \begin{array}{cccc}
+        1 & 0 & 0 & 1 \\
+        0 & 1 & 1 & 0 \\
+        1 & 1 & 1 & 1 
+      \end{array} \right)
+\end{equation*}
+    \end{minipage}
+};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\def\linkdoub{\draw [double distance=1mm, very thick] (0,0)--}
+\def\linksing{\draw [very thick] (0,0)--}
+\def\check{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (0,3.5pt)--(0,-3.5pt);
+    \draw [very thick] (3.5pt,0)--(-3.5pt,0);
+}
+\def\bit{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (-3.2pt,2.2pt)--(3.2pt,2.2pt);
+    \draw [very thick] (-3.2pt,-2.2pt)--(3.2pt,-2.2pt);
+}
+\def\thetaone{90}
+\def\thetatwo{-90}
+\def\armLength{0.9}
+\def\symbolDist{1}
+\begin{tikzpicture}
+\linkdoub(\thetaone:\armLength);
+\linksing(\thetaone:\armLength);
+\linksing(\thetatwo:\armLength);
+\begin{scope}[shift=(\thetaone:\symbolDist)]
+\bit
+\end{scope}
+\begin{scope}[shift=(\thetatwo:\symbolDist)]
+\linkdoub(\thetaone:\armLength);
+\linksing(\thetaone:\armLength);
+\bit
+\end{scope}
+\check
+\draw [<->,thick] (0.5,0) -- (1.3,0);
+\node [align=center] at (2.5,0) {$ \mathbf{B} = [\begin{array}{cc} 3&3 \end{array}]$};
+
+\end{tikzpicture}
+\end{center}
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\subsection{LDPC码的叠加方式}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{LDPC卷积码与LDPC分组码的构造}
+        \begin{block}{LDPC码叠加方式}
+        \begin{center}
+\def\check{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (0,3.5pt)--(0,-3.5pt);
+    \draw [very thick] (3.5pt,0)--(-3.5pt,0);
+}
+\def\bit{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (-3.2pt,2.2pt)--(3.2pt,2.2pt);
+    \draw [very thick] (-3.2pt,-2.2pt)--(3.2pt,-2.2pt);
+}
+\begin{tikzpicture}
+\foreach \x / \z in {0/0,12/3,24/6}
+{
+\begin{scope}[xshift=\x,yshift=\z]
+    \draw[very thick] (-3,4) -- (-2,0);
+    \draw[very thick] (3,4) -- (-2,0);
+    \draw[very thick] (-1.2,4) -- (0,0);
+    \draw[very thick] (1.2,4) -- (0,0);
+    \draw[very thick] (-3,4) -- (2,0);
+    \draw[very thick] (-1.2,4) -- (2,0);
+    \draw[very thick] (1.2,4) -- (2,0);
+    \draw[very thick] (3,4) -- (2,0);
+\begin{scope}[xshift=1.2cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=-1.2cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=3cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=-3cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=2cm,yshift=0cm]
+\check
+\end{scope}
+\begin{scope}[xshift=-2cm,yshift=0cm]
+\check
+\end{scope}
+\check
+\end{scope}
+}
+\draw [<->,thick] (4,2) -- (5,2);
+\node at (8,2) (steptwo){
+    \begin{minipage}{0.40\textwidth}
+    \LARGE
+        \begin{equation*}
+    H = \left(
+      \begin{array}{cccc}
+        P^1 & 0 & 0 & P^1 \\
+        0 & P^1 & P^1 & 0 \\
+        P^1 & P^1 & P^1 & P^1 
+      \end{array} \right)
+\end{equation*}
+    \end{minipage}
+};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\def\check{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (0,3.5pt)--(0,-3.5pt);
+    \draw [very thick] (3.5pt,0)--(-3.5pt,0);
+}
+\def\bit{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (-3.2pt,2.2pt)--(3.2pt,2.2pt);
+    \draw [very thick] (-3.2pt,-2.2pt)--(3.2pt,-2.2pt);
+}
+\begin{tikzpicture}
+%p2
+  \draw[very thick] (-2.2,4.2) -- (-2,0);
+  \draw[very thick] (-3,4) -- (-1.6,0.1);
+  \draw[very thick] (-2.6,4.1) -- (-1.2,0.2);
+%p3
+  \draw[very thick] (-0.8,4.1) -- (0,0);
+  \draw[very thick] (-0.4,4.2) -- (0.4,0.1);
+  \draw[very thick] (-1.2,4) -- (0.8,0.2);
+%p3
+  \draw[very thick] (-0.8,4.1) -- (2,0);
+  \draw[very thick] (-0.4,4.2) -- (2.4,0.1);
+  \draw[very thick] (-1.2,4) -- (2.8,0.2);
+%p2
+  \draw[very thick] (2.0,4.2) -- (2,0);
+  \draw[very thick] (1.2,4) -- (2.4,0.1);
+  \draw[very thick] (1.6,4.1) -- (2.8,0.2);
+%p2
+  \draw[very thick] (3.8,4.2) -- (2,0);
+  \draw[very thick] (3,4) -- (2.4,0.1);
+  \draw[very thick] (3.4,4.1) -- (2.8,0.2);
+\foreach \x / \z in {0/0,0.4/0.1,0.8/0.2}
+{
+\begin{scope}[xshift=\x cm,yshift=\z cm]
+\draw[very thick] (3,4) -- (-2,0);
+\draw[very thick] (1.2,4) -- (0,0);
+\draw[very thick] (-3,4) -- (2,0);
+\begin{scope}[xshift=1.2cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=-1.2cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=3cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=-3cm,yshift=4cm]
+\bit
+\end{scope}
+\begin{scope}[xshift=2cm,yshift=0cm]
+\check
+\end{scope}
+\begin{scope}[xshift=-2cm,yshift=0cm]
+\check
+\end{scope}
+\check
+\end{scope}
+}
+\draw [<->,thick] (4,2) -- (5,2);
+\node at (8,2) (steptwo){
+    \begin{minipage}{0.40\textwidth}
+    \LARGE
+        \begin{equation*}
+    H = \left(
+      \begin{array}{cccc}
+        P^2 & 0 & 0 & P^1 \\
+        0 & P^3 & P^1 & 0 \\
+        P^1 & P^3 & P^2 & P^2  
+      \end{array} \right)
+\end{equation*}
+    \end{minipage}
+};
+\end{tikzpicture}
+\end{center}
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{LDPC分组码的构造}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{LDPC卷积码与LDPC分组码的构造}
+        \begin{block}{LDPC分组码的构造}
+GF($q$)为含$q=2^m$个元素的有限域，其中$m$为在GF($q$)代表一个符号所需的位数。
+令$M$为原模图叠加数，其中$M$是一个大整数。
+通过以下两步从原模图的$(c-b)\times c$邻接矩阵$\mathbf{B}=[B_{i,j}]$构造码长为$n_{BC}=Mc$的$q$元LDPC分组码：
+\begin{enumerate}
+\item 将$\mathbf{B}$中的非零元$B_{i,j}$替换为随机选择的$M \times M$置换矩阵，将$\mathbf{B}$中的零元$B_{i,j}$替换为$M \times M$零矩阵。此时得到对应于$\mathbf{B}$的二元校验矩阵$\mathbf{H}$；
+\item 将$\mathbf{H}$中非零元替换为从有限域GF($q$)中随机选取的元素，得到LDPC分组码的$q$元校验矩阵$\mathbf{H}_{BC}$。
+\end{enumerate}
+对于LDPC分组码，必须等待整个码块接受完毕才能执行置信传播解码算法。故$q$元LDPC分组码的解码延时为
+\begin{equation*}
+T_{BC}=n_{BC}\cdot m = Mmc
+\end{equation*}
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{LDPC卷积码的定义}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{LDPC卷积码与LDPC分组码的构造}
+        \begin{block}{LDPC卷积码的定义}
+        \begin{columns}
+        \begin{column}{0.4\textwidth}
+        \footnotesize
+对于给定码率为$R=b/c$的LDPC卷积码，其定义为，存在校验矩阵$\mathbf{H}_{[\infty]}$使得无限长向量$\mathbf{v}_{[\infty]}$有$\mathbf{H}_{[\infty]}\mathbf{v}_{[\infty]}^\text{T} =\mathbf{0}_{[\infty]}$，而$\mathbf{0}_{[\infty]}$是无限长零向量。
+$\mathbf{H}_i(t),i=0,1,\dots,m_s$为$(c-b)\times c$的矩阵满足以下条件：
+\begin{itemize}
+\item $\mathbf{H}_i(t)=\mathbf{0}$，当$i<0$和$i>m_s$，$\forall t \geq 1$；
+\item $\exists t\geq 0$，使得$\mathbf{H}_{m_s}(t) \neq \mathbf{0}$；
+\item $\forall t \geq 1$，$\mathbf{H}_0(1)$满秩。
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\footnotesize
+\begin{equation*}
+    \mathbf{H}_{[\infty]} = \left[
+          \begin{array}{ccccc}
+            \mathbf{H}_0(1) & & & & \\
+            \mathbf{H}_1(1) & \mathbf{H}_0(2) & & & \\
+            \vdots & \mathbf{H}_1(2) & \ddots & & \\
+            \mathbf{H}_{m_s}(1) & \vdots & \ddots & \mathbf{H}_0(t) & \\
+             & \mathbf{H}_{m_s}(2) & \ddots & \mathbf{H}_1(t) & \ddots\\
+             & & \ddots & \vdots & \ddots \\
+             & & & \mathbf{H}_{m_s}(t) & \ddots \\
+             & & & & \ddots
+          \end{array} \right]
+\end{equation*}
+\end{column}
+\end{columns}
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{LDPC卷积码的构造}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+    \frametitle{LDPC卷积码与LDPC分组码的构造}
+        \begin{block}{LDPC卷积码的构造}
+        \begin{columns}
+        \begin{column}{0.5\textwidth}
+        \footnotesize
+设原模图的基本矩阵为$(c-b)\times c$的$\mathbf{B}$。
+首先构造$\mathbf{B}_{CC}$如右。
+其中$m_s$为当前原模图与前一个原模图相连的边数。$\mathbf{B}_0 , \mathbf{B}_1 , \dots , \mathbf{B}_{m_s}$为$(c-b)\times c$矩阵，且满足
+\begin{equation*}
+\sum^{m_s}_{i=0} \mathbf{B}_i = \mathbf{B}
+\end{equation*}
+
+然后将$\mathbf{B}_{CC}$中的非零元替换为随机选择的$M \times M$置换矩阵，将$\mathbf{B}_{CC}$中的零元替换为$M \times M$零矩阵，得到LDPC卷积码校验矩阵$\mathbf{H}_{CC}$。
+\end{column}
+\begin{column}{0.5\textwidth}
+\footnotesize
+\begin{equation*}
+    \mathbf{B}_{CC} = \left[
+          \begin{array}{ccc}
+            \mathbf{B}_0& & \\
+            \mathbf{B}_1 & \mathbf{B}_0 & \\
+            \vdots & \mathbf{B}_1 & \ddots \\
+            \mathbf{B}_{m_s} & \vdots & \ddots \\
+             & \mathbf{B}_{m_s} & \ddots \\
+             & & \ddots 
+          \end{array} \right]
+\end{equation*}
+最后将$\mathbf{H}_{CC}$中的非零元替换为从有限域GF($q$)中随机选取的元素，得到LDPC卷积码的$q$元校验矩阵$\mathbf{H}_{CC}$，其限制长度为$v_s=(m_s+1)Mc$。
+\end{column}
+\end{columns}
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{构造LDPC卷积码的图释}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{LDPC卷积码与LDPC分组码的构造}
+        \begin{block}{构造LDPC卷积码的图释}
+下图为通过原模图叠加方法构造LDPC卷积码的示意图。
+首先复制几次(3,6)正则LDPC码的原模图，设定记忆因子$m_s=1$，然后将原模图之间连接起来。
+其中，原模图的基本矩阵为$ \mathbf{B} = [\begin{array}{cc} 3&3 \end{array}]$，使用到的组成矩阵为$\mathbf{B}_0 = [\begin{array}{cc} 2&1 \end{array}]$,$\mathbf{B}_1 = [\begin{array}{cc} 1&2 \end{array}]$。
+
+\begin{center}
+\def\linkdoub{\draw [double distance=1mm, very thick] (0,0)--}
+\def\linksing{\draw [very thick] (0,0)--}
+\def\check{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (0,3.5pt)--(0,-3.5pt);
+    \draw [very thick] (3.5pt,0)--(-3.5pt,0);
+}
+\def\bit{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (-3.2pt,2.2pt)--(3.2pt,2.2pt);
+    \draw [very thick] (-3.2pt,-2.2pt)--(3.2pt,-2.2pt);
+}
+\def\thetaone{90}
+\def\thetatwo{-90}
+\def\thetathree{60}
+\def\thetafour{-60}
+\def\armLength{0.9}
+\def\symbolDist{1}
+\begin{tikzpicture}
+\foreach \x in {0.8,1.6,2.4,3.2,4}
+{
+\begin{scope}[shift=(0:\x)]
+\linkdoub(\thetaone:\armLength);
+\linksing(\thetaone:\armLength);
+\linksing(\thetatwo:\armLength);
+\begin{scope}[shift=(\thetaone:\symbolDist)]
+\bit
+\end{scope}
+\begin{scope}[shift=(\thetatwo:\symbolDist)]
+\linkdoub(\thetaone:\armLength);
+\linksing(\thetaone:\armLength);
+\bit
+\end{scope}
+\check
+\end{scope}
+}
+\node at (4.7,0.9) {\ldots};
+\node at (4.7,0) {\ldots};
+\node at (4.7,-0.9) {\ldots};
+\draw [->,very thick] (5.3,0) -- (6,0);
+\begin{scope}[shift=(0:5.6)]
+\foreach \x in {1,2,...,5}
+{
+    \begin{scope}[shift=(0:\x)]
+        \linkdoub(\thetathree:\armLength);
+        \linksing(\thetafour:\armLength);
+        \check
+        \begin{scope}[shift=(\thetathree:\symbolDist)]
+        \linksing(\thetafour:\armLength);
+        \bit
+        \end{scope}
+        \begin{scope}[shift=(\thetafour:\symbolDist)]
+        \linkdoub(\thetathree:\armLength);
+        \bit
+        \end{scope}
+    \end{scope}
+}
+\node at (6.5,0.9) {\ldots};
+\node at (6.5,0) {\ldots};
+\node at (6.5,-0.9) {\ldots};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+\section{和积算法与滑动窗口解码算法}
+\subsection{和积算法}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{和积算法与滑动窗口解码算法}
+        \begin{block}{和积算法}
+        其具体步骤为
+\begin{enumerate}
+\item 给信息节点发送到校验节点的信息$M_{j,i}$赋值为$R_i$；
+\item 计算校验节点发送到信息节点的信息$E_{j,i}$；
+\item 计算信息节点的LLR，$L_i$。生成预测码字$\hat{c}$，代入校验方程，若满足，则停止算法，或者达到最大迭代次数，停止算法；
+\item 计算信息节点发送到校验节点的信息$M_{j,i}$，遍历次数加一。继续第二步。
+\end{enumerate}
+如果该算法收敛，经过足够多次迭代后，将渐近求出码字中各位为1或者0的概率，进而实现逐符号最大后验概率译码。
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{滑动窗口解码算法}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{和积算法与滑动窗口解码算法}
+        \begin{block}{滑动窗口解码算法}
+        \begin{center}
+\def\linkdoub{\draw [double distance=1mm, very thick] (0,0)--}
+\def\linksing{\draw [very thick] (0,0)--}
+\def\check{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (0,3.5pt)--(0,-3.5pt);
+    \draw [very thick] (3.5pt,0)--(-3.5pt,0);
+}
+\def\bit{%
+    \filldraw [fill=white,very thick] (0,0) circle (5pt);
+    \draw [very thick] (-3.2pt,2.2pt)--(3.2pt,2.2pt);
+    \draw [very thick] (-3.2pt,-2.2pt)--(3.2pt,-2.2pt);
+}
+\def\thetaone{60}
+\def\thetatwo{-60}
+\def\armLength{0.9}
+\def\symbolDist{1}
+
+\begin{tikzpicture}
+\foreach \x in {1,2,...,5}
+{
+    \begin{scope}[shift=(0:\x)]
+        \linkdoub(\thetaone:\armLength);
+        \linksing(\thetatwo:\armLength);
+        \check
+        \begin{scope}[shift=(\thetaone:\symbolDist)]
+        \linksing(\thetatwo:\armLength);
+        \bit
+        \end{scope}
+        \begin{scope}[shift=(\thetatwo:\symbolDist)]
+        \linkdoub(\thetaone:\armLength);
+        \bit
+        \end{scope}
+    \end{scope}
+}
+\node at (6.5,0.9) {\ldots};
+\node at (6.5,0) {\ldots};
+\node at (6.5,-0.9) {\ldots};
+\node [align=center] at (0,0) {Target\\
+symbols
+};
+\draw [->] (0.3,0.4) -- (1.2,0.7);
+\draw [->] (0.3,-0.4) -- (1.2,-0.7);
+\draw [->] (0.3,-0.4) -- (1.2,-0.7);
+\draw [dashed] (0.7,-1.3) -- (3.8,-1.3);
+\draw [dashed] (0.7,1.3) -- (3.8,1.3);
+\draw [dashed] (0.7,-1.3) -- (0.7,1.3);
+\draw [dashed] (3.8,-1.3) -- (3.8,1.3);
+\draw [thick] (0.7,1.3) -- (0.7,1.6);
+\draw [thick] (1.8,1.3) -- (1.8,1.6);
+\draw [thick] (2.8,1.3) -- (2.8,1.6);
+\draw [thick] (3.8,1.3) -- (3.8,1.6);
+\draw [<->,thick] (0.7,1.45) -- (1.8,1.45);
+\node [align=center] at (1.25,1.65) {$Mc$};
+\draw [thick] (0.7,-1.3) -- (0.7,-1.6);
+\draw [thick] (3.8,-1.3) -- (3.8,-1.6);
+\draw [<->,thick] (0.7,-1.45) -- (3.8,-1.45);
+\node [align=center] at (2.25,-1.65) {$WMc$};
+\end{tikzpicture}
+\begin{tikzpicture}
+\foreach \x in {1,2,...,5}
+{
+    \begin{scope}[shift=(0:\x)]
+        \linkdoub(\thetaone:\armLength);
+        \linksing(\thetatwo:\armLength);
+        \check
+        \begin{scope}[shift=(\thetaone:\symbolDist)]
+        \linksing(\thetatwo:\armLength);
+        \bit
+        \end{scope}
+        \begin{scope}[shift=(\thetatwo:\symbolDist)]
+        \linkdoub(\thetaone:\armLength);
+        \bit
+        \end{scope}
+    \end{scope}
+}
+\node at (6.5,0.9) {\ldots};
+\node at (6.5,0) {\ldots};
+\node at (6.5,-0.9) {\ldots};
+\node [align=center] at (0,0) {Decoded\\
+symbols
+};
+\draw [->] (0.3,0.4) -- (1.2,0.7);
+\draw [->] (0.3,-0.4) -- (1.2,-0.7);
+\draw [->] (0.3,-0.4) -- (1.2,-0.7);
+\draw [dashed] (1.8,-1.3) -- (4.8,-1.3);
+\draw [dashed] (1.8,1.3) -- (4.8,1.3);
+\draw [dashed] (1.8,-1.3) -- (1.8,1.3);
+\draw [dashed] (4.8,-1.3) -- (4.8,1.3);
+\draw [thick] (1.8,1.3) -- (1.8,1.6);
+\draw [thick] (2.8,1.3) -- (2.8,1.6);
+\draw [thick] (3.8,1.3) -- (3.8,1.6);
+\draw [thick] (4.8,1.3) -- (4.8,1.6);
+\draw [<->,thick] (1.8,1.45) -- (2.8,1.45);
+\node [align=center] at (2.25,1.65) {$Mc$};
+\draw [thick] (1.8,-1.3) -- (1.8,-1.6);
+\draw [thick] (4.8,-1.3) -- (4.8,-1.6);
+\draw [<->,thick] (1.8,-1.45) -- (4.8,-1.45);
+\node [align=center] at (3.25,-1.65) {$WMc$};
+\end{tikzpicture}
+\end{center}
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{模拟仿真结果}
+\subsection{LDPC分组码码长与LDPC卷积码限制长度相等}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{模拟仿真结果}
+        \begin{block}{LDPC分组码码长与LDPC卷积码限制长度相等}
+        \begin{columns}
+        \begin{column}{0.4\textwidth}
+        右图展示的是$q$元LDPC分组码及$q$元LDPC卷积码解码时误比特率BER达到$10^{-4}$所需翻转概率$\epsilon$与原模图复制数$M$之间的关系。
+$q$元LDPC分组码及$q$元LDPC卷积码都由码率为$R=1/2$的(2,4)正则原模图构造。
+$q$元LDPC卷积码的滑窗解码器的窗口大小为$W=12$。
+        \end{column}
+        \begin{column}{0.6\textwidth}
+        \begin{center}
+\pgfplotsset{compat=1.13}
 \begin{tikzpicture} 
 \begin{axis}[
-    xlabel={com com per bit},
-    ylabel={GFQ},
+    xlabel={原模图复制数$M$},
+    ylabel={所需翻转概率$\epsilon$},
+    grid=major,
+    legend style={
+        font=\tiny,
+        cells={anchor=east},
+        legend pos=north west,
+    },
+]
+\addplot[color=red,mark=square] table {data_d15.dat};
+\addplot[color=red,mark=triangle] table {data_d16.dat};
+\addplot[color=red,mark=o] table {data_d17.dat};
+\addplot[color=blue,mark=square] table {data_d18.dat};
+\addplot[color=blue,mark=triangle] table {data_d19.dat};
+\addplot[color=blue,mark=o] table {data_d20.dat};
+\legend{2-ary LDPC-BC,
+        4-ary LDPC-BC,
+        8-ary LDPC-BC,
+        2-ary LDPC-CC,
+        4-ary LDPC-CC,
+        8-ary LDPC-CC}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{column}
+\end{columns}
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{模拟仿真结果}
+        \begin{block}{LDPC分组码码长与LDPC卷积码限制长度相等}
+        \begin{columns}
+        \begin{column}{0.4\textwidth}
+        右图描述的是$q$元LDPC分组码及$q$元LDPC卷积码解码时误比特率BER达到$10^{-4}$所需翻转概率$\epsilon$与原模图复制数$M$之间的关系。
+$q$元LDPC分组码及$q$元LDPC卷积码都由$R=1/2$的(3,6)正则原模图构造。
+        \end{column}
+        \begin{column}{0.6\textwidth}
+        \begin{center}
+\pgfplotsset{compat=1.13}
+\begin{tikzpicture} 
+\begin{axis}[
+    xlabel={原模图复制数$M$},
+    ylabel={所需翻转概率$\epsilon$},
+    grid=major,
+    legend style={
+        font=\tiny,
+        cells={anchor=east},
+        legend pos=north west,
+    },
+]
+\addplot[color=red,mark=square] table {data_d21.dat};
+\addplot[color=red,mark=triangle] table {data_d22.dat};
+\addplot[color=red,mark=o] table {data_d23.dat};
+\addplot[color=blue,mark=square] table {data_d24.dat};
+\addplot[color=blue,mark=triangle] table {data_d25.dat};
+\addplot[color=blue,mark=o] table {data_d26.dat};
+\legend{2-ary LDPC-BC,
+        4-ary LDPC-BC,
+        8-ary LDPC-BC,
+        2-ary LDPC-CC,
+        4-ary LDPC-CC,
+        8-ary LDPC-CC}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+        \end{column}
+        \end{columns}
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{LDPC分组码与LDPC卷积码的解码延时相等}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{模拟仿真结果}
+        \begin{block}{LDPC分组码与LDPC卷积码的解码延时相等}
+        \begin{columns}
+        \begin{column}{0.4\textwidth}
+右图中8元LDPC分组码及8元LDPC卷积码都由码率为$R=1/2$的(3,6)正则原模图构造。
+        \end{column}
+        \begin{column}{0.6\textwidth}
+        \begin{center}
+        \pgfplotsset{compat=1.13}
+\begin{tikzpicture}
+\begin{semilogyaxis}[
+    xlabel={反转概率$\epsilon$},
+    ylabel={BER},
+    grid=major,
+    legend style={
+        font=\tiny,
+        cells={anchor=west},
+        legend pos=south east,
+    },
+    ymin=0.00001,
+    ymax=1,
+]
+\addplot[color=red,mark=square] table {data_d1.dat};
+\addplot[color=red,mark=triangle] table {data_d2.dat};
+\addplot[color=blue,mark=o] table {data_d3.dat};
+\addplot[color=blue,mark=square] table {data_d4.dat};
+\addplot[color=blue,mark=triangle] table {data_d5.dat};
+\addplot[color=blue,mark=diamond] table {data_d6.dat};
+\legend{LDPC-BC $M=192$\\
+        LDPC-BC $M=384$\\
+        LDPC-CC $M = 32,W =12$\\
+        LDPC-CC $M = 64,W =6$\\
+        LDPC-CC $M = 64,W =12$\\
+        LDPC-CC $M = 128,W =6$\\}
+\end{semilogyaxis}
+\end{tikzpicture}
+\end{center}
+        \end{column}
+        \end{columns}
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{模拟仿真结果}
+        \begin{block}{LDPC分组码与LDPC卷积码的解码延时相等}
+        \begin{columns}
+        \begin{column}{0.4\textwidth}
+        上图展示在GF($8$)上比较要达到相同的误比特率所需的翻转概率与解码延时之间的关系。
+其中8元LDPC分组码及8元LDPC卷积码都由码率为$R=1/2$的(3,6)正则原模图构造。
+        \end{column}
+        \begin{column}{0.6\textwidth}
+        \begin{center}
+        \begin{tikzpicture} 
+\begin{axis}[
+    xlabel={解码延时(bits)},
+    ylabel={所需翻转概率$\epsilon$},
+    grid=major,
+    legend style={
+        font=\tiny,
+        cells={anchor=west},
+        legend pos=south east,
+    },
+    xmin=0,
+]
+\addplot table {data_d7.dat};
+\addplot table {data_d8.dat};
+\addplot table {data_d9.dat};
+\addplot table {data_d10.dat};
+\legend{LDPC-BC,$M = 32,64,128,192,288,384,576$\\
+        LDPC-CC,$M = 32,W =2,3,\dots,12$\\
+        LDPC-CC,$M = 64,W =2,3,\dots,12$\\
+        LDPC-CC,$M = 128,W =2,3,\dots,8$\\}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+        \end{column}
+        \end{columns}
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{模拟仿真结果}
+        \begin{block}{LDPC分组码与LDPC卷积码的解码延时相等}
+        \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|c|}
+ \hline
+解码 & \multicolumn{3}{|c|}{LDPC-BC} & \multicolumn{3}{|c|}{LDPC-CC} \\ \cline{2-7}
+延时 & GF(2) & GF(4) & GF(8) & GF(2) & GF(4) & GF(8) \\ \hline
+2304 bits & 0.14 & 0.15 & 0.15 & 0.12 & 0.16 & 0.18\\ \hline
+4608 bits & 0.16 & 0.17 & 0.16 & 0.18 & 0.19 & 2.0\\ \hline
+6912 bits & 0.17 & 0.18 & 0.17 & 0.19 & 0.21 & 0.21\\ \hline
+9216 bits & 0.17 & 0.19 & 0.19 & 0.21 & 0.22 & 0.22\\ \hline
+\end{tabular}
+\end{center}
+上表展示了，(3,6)正则q元LDPC分组码与(3,6)正则q元LDPC卷积码在不同的GF($q$)以及不同的解码延时的条件下，误比特率BER达到$10^{-4}$所需翻转概率$\epsilon$。
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{LDPC分组码与LDPC卷积码的解码复杂度比较}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{模拟仿真结果}
+        \begin{block}{LDPC分组码与LDPC卷积码的解码复杂度比较}
+        \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|c|}
+ \hline
+解码 & \multicolumn{3}{|c|}{$I_{BC}$} & \multicolumn{3}{|c|}{$I_{CC}(W=6)$} \\ \cline{2-7}
+延时 & GF(2) & GF(4) & GF(8) & GF(2) & GF(4) & GF(8) \\ \hline
+4608 bits & 13.8 & 12.3 & 11.1 & 3.3 & 3.2 & 3.0\\ \hline
+6912 bits & 15.6 & 14.1 & 12.6 & 3.9 & 3.7 & 3.4\\ \hline
+\end{tabular}
+\end{center}
+基于相等的解码延时的条件，比较q元LDPC卷积码与q元LDPC分组码的计算复杂度。
+上表展示了，在解码延时分别为4608，6912比特时，(3,6)正则q元LDPC卷积码与(3,6)正则q元LDPC分组码解码误比特率达到$10^{-4}$所需的平均迭代次数$I_{CC}$和$I_{BC}$。
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[shrink]
+    \frametitle{模拟仿真结果}
+        \begin{block}{LDPC分组码与LDPC卷积码的解码复杂度比较}
+        \begin{columns}
+        \begin{column}{0.4\textwidth}
+        右图展示了，(3,6)正则q元LDPC卷积码与(3,6)正则q元LDPC分组码每解码一比特的计算复杂度与GF($q$)的关系。
+        \end{column}
+        \begin{column}{0.6\textwidth}
+        \begin{center}
+\begin{tikzpicture} 
+\begin{axis}[
+    xlabel={GF($q$)},
+    ylabel={解码每一比特的计算复杂度},
     grid=major,
     legend style={
         font=\tiny,
@@ -25,4 +849,11 @@
         6912 LDPC-CC\\}
 \end{axis}
 \end{tikzpicture}
+\end{center}
+        \end{column}
+        \end{columns}
+        \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%
+
 \end{document}

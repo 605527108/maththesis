@@ -172,7 +172,6 @@ LDPC码的叠加能很形象地通过Tanner图的方式表现出来。
         P^1 & P^3 & P^2 & P^2 
       \end{array} \right)
 \end{equation}
-
 其中$P^i$对应循环置换矩阵，其意义是对集合$\{1,\dots,m\}$进行移位操作$i-1$次：
 它的列向量对应于变量节点，行向量对应于校验节点。比如$P^1$对应单位矩阵，以及
 \begin{equation}
@@ -290,7 +289,6 @@ $\mathbf{H}_i(t),i=0,1,\dots,m_s$为$(c-b)\times c$的矩阵满足以下条件�
 \item $\exists t\geq 0$，使得$\mathbf{H}_{m_s}(t) \neq \mathbf{0}$；
 \item $\forall t \geq 1$，$\mathbf{H}_0(1)$满秩。
 \end{itemize}
-
 其中参数$m_s$称为LDPC卷积码的记忆因子。
 $\nu = (m_s+1)c$为LDPC卷积码的限制长度。
 对于$\forall t,\tau>1,\mathbf{H}_i(t) = \mathbf{H}_i(t+\tau),\forall i = 0,1,\dots,m_s$的情况，我们称LDPC卷积码具有周期性。
@@ -417,7 +415,6 @@ $\nu = (m_s+1)c$为LDPC卷积码的限制长度。
             \mathbf{B}_1 & \mathbf{B}_0
           \end{array} \right]_{2(c-b)\times 2c}
 \end{equation}
-
 其中$\mathbf{B}_{BC}$每个列向量的重量为$d_v$，每个行向量的重量为$d_c$。
 然后使用第二节的原模图叠加方法构造LDPC分组码的校验矩阵
 \begin{equation}
